@@ -1,6 +1,10 @@
 //using common JS modules b/c NodeJS does not provide support for ES6 imports
 const express = require('express');
+const mongoose = require('mongoose');
+const keys = require('./config/keys');
 require('./services/passport');
+
+mongoose.connect(keys.mongoURI);
 
 const app = express();
 require('./routes/authRoutes')(app);
