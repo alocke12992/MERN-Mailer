@@ -5,5 +5,6 @@ const app = express();
 app.get('/', (req, res) => {
   res.send({ hi: 'there' });
 });
-
-app.listen(5000);
+// Set up dynamic port to prep for Heroku deploy
+const PORT = process.env.PORT || 5000;
+app.listen(PORT);
