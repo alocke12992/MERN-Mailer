@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const keys = require('./config/keys');
+const pathfinderUI = require('pathfinder-ui');
+
 require('./models/User');
 require('./services/passport');
 
@@ -19,6 +21,14 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(
+  '/pathfinder',
+  function(req, res, next) {
+    pathfinderUI(app);
+    next();
+  },
+  pathfinderUI.router,
+);
 
 require('./routes/authRoutes')(app);
 
