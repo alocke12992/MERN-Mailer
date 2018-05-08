@@ -16,3 +16,8 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 registerServiceWorker();
+
+console.log(
+  'react stripe key',
+  process.env.REACT_APP_STRIPE_KEY,
+);
