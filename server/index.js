@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 const pathfinderUI = require('pathfinder-ui');
 
@@ -13,6 +14,8 @@ mongoose.connect(keys.mongoURI);
 
 const app = express();
 
+//Use Body Parser since, by default, Express does not parse request payload.
+app.use(bodyParser.json());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
