@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Header from './Header';
 import Dashboard from './Dashboard';
@@ -8,7 +8,7 @@ import NoMatch from './NoMatch';
 
 const App = () => {
   return (
-    <Fragment>
+    <div className="container">
       <Header />
       <Switch>
         <Route exact path="/" component={Landing} />
@@ -24,7 +24,7 @@ const App = () => {
         />
         <Route component={NoMatch} />
       </Switch>
-    </Fragment>
+    </div>
   );
 };
 
