@@ -31,6 +31,7 @@ app.use(
 );
 
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 // Set up dynamic port to prep for Heroku deploy
 const PORT = process.env.PORT || 5000;
