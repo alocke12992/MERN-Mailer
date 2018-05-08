@@ -8,8 +8,8 @@ const keys = require('./config/keys');
 const pathfinderUI = require('pathfinder-ui');
 
 require('./models/User');
+require('./models/Survey');
 require('./services/passport');
-
 mongoose.connect(keys.mongoURI);
 
 const app = express();
@@ -35,6 +35,25 @@ app.use(
 
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+
+// Handle production build routes for Heroku
+if (process.env.NODE_ENV === 'production') {
+  // Express will serve up production assets
+  app.use(express.static('client/build'));
+
+  //express will serve index.html if it doesnt recognize the route
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(
+      path.resolve(
+        _dirname,
+        'client',
+        'build',
+        'index.html',
+      ),
+    );
+  });
+}
 
 // Set up dynamic port to prep for Heroku deploy
 const PORT = process.env.PORT || 5000;
