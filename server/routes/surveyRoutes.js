@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const requireLogin = require('../middleWares/requireLogin');
 const requireCredits = require('../middleWares/requireCredits');
 
-//Create instance of Survey
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
