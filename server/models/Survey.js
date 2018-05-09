@@ -8,7 +8,7 @@ const surveySchema = new Schema({
   subject: String,
   //Specifies that we want an array of strings
   recipients: [RecipientSchema],
-  // Record the total number of times recipients have selected the option
+  // Record the total number of times recipients have voted
   yes: { type: Number, default: 0 },
   no: { type: Number, default: 0 },
   // use _ to show this is a reference field

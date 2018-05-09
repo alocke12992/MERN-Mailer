@@ -1,3 +1,4 @@
+//Create User model using Mongoose
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
