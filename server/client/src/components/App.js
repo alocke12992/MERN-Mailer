@@ -1,38 +1,30 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Header from './Header';
 import Dashboard from './Dashboard';
 import Landing from './Landing';
-import SurveyNew from './SurveyNew';
+import SurveyNew from './surveys/SurveyNew';
 import NoMatch from './NoMatch';
-import * as actions from '../actions';
+import FetchUser from './FetchUser';
+import AuthRoute from './AuthRoute';
 
 class App extends React.Component {
-  componentDidMount() {
-    this.props.fetchUser();
-  }
   render() {
     return (
-      <div className="container">
+      <div>
         <Header />
-        <Switch>
-          <Route exact path="/" component={Landing} />
-          <Route
-            exact
-            path="/surveys"
-            component={Dashboard}
-          />
-          <Route
-            exact
-            path="/surveys/new"
-            component={SurveyNew}
-          />
-          <Route component={NoMatch} />
-        </Switch>
+        <FetchUser>
+          <Switch>
+            <Route exact path="/" component={Landing} />
+            <AuthRoute exact path="/surveys" component={Dashboard} />
+            <AuthRoute exact path="/surveys/new" component={SurveyNew} />
+            <Route component={NoMatch} />
+          </Switch>
+        </FetchUser>
       </div>
     );
   }
 }
 
-export default connect(null, actions)(App);
+export default App;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Payments from './Payments';
 
 class Header extends React.Component {
@@ -31,9 +31,7 @@ class Header extends React.Component {
     return (
       <nav>
         <div className="nav-wrapper blue accent-2">
-          <Link
-            to={this.props.auth ? '/surveys' : '/'}
-            className="brand-logo">
+          <Link to={this.props.auth ? '/surveys' : '/'} className="brand-logo">
             Mern Mail
           </Link>
           <ul className="right">{this.renderContent()}</ul>
@@ -48,4 +46,4 @@ const mapStateToProps = ({ auth }) => {
   };
 };
 
-export default connect(mapStateToProps)(Header);
+export default withRouter(connect(mapStateToProps)(Header));
