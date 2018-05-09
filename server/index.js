@@ -35,6 +35,7 @@ app.use(
 
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 // Handle production build routes for Heroku
 if (process.env.NODE_ENV === 'production') {
