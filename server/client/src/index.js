@@ -7,6 +7,10 @@ import 'materialize-css/dist/css/materialize.min.css';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
+//only used to test routes
+import axios from 'axios';
+window.axios = axios;
+
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
