@@ -41,10 +41,11 @@ if (process.env.NODE_ENV === 'production') {
   //express will serve index.html if it doesnt recognize the route
   const path = require('path');
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(_dirname, 'client', 'build', 'index.html'));
+    res.sendFile(path.resolve(___dirname, 'client', 'build', 'index.html'));
   });
 }
 
 // Set up dynamic port to prep for Heroku deploy
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
+
