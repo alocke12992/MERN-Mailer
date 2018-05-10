@@ -48,6 +48,7 @@ module.exports = app => {
             $inc: {[choice]: 1},
             // Set one of the properties found as responded
             $set: {'recipients.$.responded': true},
+            lastResponded: new Date()
             // .exec() runs the query
           }).exec()
       })
