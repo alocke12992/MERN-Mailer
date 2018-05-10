@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const Path = require('path-parser').default;
 // URL is a default module in node to help parse urls
-const { URL } = require('url');
+const {URL} = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
@@ -12,7 +12,7 @@ const Survey = mongoose.model('surveys');
 
 module.exports = app => {
   app.get('/api/surveys', requireLogin, async (req, res) => {
-    const surveys = await Survey.find({ _user: req.user.id }).select({
+    const surveys = await Survey.find({_user: req.user.id}).select({
       recipients: false,
     });
 
@@ -26,29 +26,43 @@ module.exports = app => {
 
   app.post('/api/surveys/webhooks', (req, res) => {
     const p = new Path('/api/surveys/:surveyId/:choice');
-    const events = _.chain(req.body)
-      .map(({ email, url }) => {
+
+    _.chain(req.body)
+      .map(({email, url}) => {
         const match = p.test(new URL(url).pathname);
         if (match) {
-          return { email, surveyId: match.surveyId, choice: match.choice };
+          return {email, surveyId: match.surveyId, choice: match.choice};
         }
       })
       // Remove undefined element - return only event obj
       .compact()
       // Remove duplicate records
       .uniqBy('email', 'surveyId')
+      .each(({surveyId, email, choice}) => {
+        Survey.updateOne({
+          _id: surveyId,
+          recipients: {
+            $elemMatch: {email: email, responded: false},
+          },
+        }, {
+            $inc: {[choice]: 1},
+            // Set one of the properties found as responded
+            $set: {'recipients.$.responded': true},
+            // .exec() runs the query
+          }).exec()
+      })
       .value();
     res.send({});
   });
 
   app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
-    const { title, subject, body, recipients } = req.body;
+    const {title, subject, body, recipients} = req.body;
 
     const survey = new Survey({
       title,
       subject,
       body,
-      recipients: recipients.split(',').map(email => ({ email: email.trim() })),
+      recipients: recipients.split(',').map(email => ({email: email.trim()})),
       _user: req.user.id,
       dateSent: Date.now(),
     });
