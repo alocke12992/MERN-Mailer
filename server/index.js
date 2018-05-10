@@ -5,8 +5,6 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
-// So I can view my routes
-const pathfinderUI = require('pathfinder-ui');
 
 require('./models/User');
 require('./models/Survey');
@@ -29,14 +27,7 @@ app.use(
 app.use(passport.initialize());
 //create passport session for user
 app.use(passport.session());
-app.use(
-  '/pathfinder',
-  function(req, res, next) {
-    pathfinderUI(app);
-    next();
-  },
-  pathfinderUI.router,
-);
+
 
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
