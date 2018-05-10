@@ -1,5 +1,6 @@
 const _ = require('lodash');
-const Path = require('path-parser');
+const Path = require('path-parser').default;
+// URL is a default module in node to help parse urls
 const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
@@ -24,36 +25,45 @@ module.exports = app => {
   });
 
   app.post('/api/surveys/webhooks', (req, res) => {
-    console.log(req.body);
-    const p = new Path('/api/surveys/:surveyId/:choice');
+    const events = _.map(req.body, ({ email, url }) => {
+      const pathname = new URL(url).pathname;
+      const p = new Path('/api/surveys/:surveyId/:choice');
+      const match = p.test(pathname);
+      if (match) {
+        return { email, surveyId: match.surveyId, choice: match.choice };
+      }
+    });
+    console.log(events);
+    // const p = new Path('/api/surveys/:surveyId/:choice');
 
-    _.chain(req.body)
-      .map(({ email, url }) => {
-        const match = p.test(new URL(url).pathname);
-        if (match) {
-          return { email, surveyId: match.surveyId, choice: match.choice };
-        }
-      })
-      .compact()
-      .uniqBy('email', 'surveyId')
-      .each(({ surveyId, email, choice }) => {
-        Survey.updateOne(
-          {
-            _id: surveyId,
-            recipients: {
-              $elemMatch: { email: email, responded: false },
-            },
-          },
-          {
-            $inc: { [choice]: 1 },
-            $set: { 'recipients.$.responded': true },
-            lastResponded: new Date(),
-          },
-        ).exec();
-      })
-      .value();
+    // // _ is the lodash call in
+    // _.chain(req.body)
+    //   .map(({ email, url }) => {
+    //     const match = p.test(new URL(url).pathname);
+    //     if (match) {
+    //       return { email, surveyId: match.surveyId, choice: match.choice };
+    //     }
+    //   })
+    //   .compact()
+    //   .uniqBy('email', 'surveyId')
+    //   .each(({ surveyId, email, choice }) => {
+    //     Survey.updateOne(
+    //       {
+    //         _id: surveyId,
+    //         recipients: {
+    //           $elemMatch: { email: email, responded: false },
+    //         },
+    //       },
+    //       {
+    //         $inc: { [choice]: 1 },
+    //         $set: { 'recipients.$.responded': true },
+    //         lastResponded: new Date(),
+    //       },
+    //     ).exec();
+    //   })
+    //   .value();
 
-    res.send({});
+    // res.send({});
   });
 
   app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
