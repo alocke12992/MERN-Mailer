@@ -1,0 +1,5 @@
+1. Improve design of the survey list cards
+2. Allow users to delete surveys
+3. Allow users to specify the 'From' field on survey emails
+4. Allow client side sorting of surveys
+5. Allow surveys to be created in 'draft mode'
